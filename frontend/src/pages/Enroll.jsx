@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
-import logo from '../assets/logo.png';
 import illustration from '../assets/illustration.png';
-import { API_BASE_URL } from '../config';
+import { API_BASE_URL } from '../config.js';
+import BrandMark from '../components/BrandMark.jsx';
 
 const Enroll = () => {
   const [name, setName] = useState('');
@@ -88,12 +88,8 @@ const Enroll = () => {
   return (
     <div className="min-h-screen flex flex-col md:flex-row">
       <div className="w-full md:w-1/2 bg-[#1F386B] text-white flex flex-col justify-center p-10">
-        <div className="flex items-center mb-8">
-          <img src={logo} alt="Monumental University Logo" className="h-[60px] w-[60px]" />
-          <h1 className="flex flex-col m-0 ml-2">
-            <span className="text-[20px] font-bold uppercase leading-none">MONUMENTAL</span>
-            <span className="text-[12px] font-normal uppercase leading-none">UNIVERSITY</span>
-          </h1>
+        <div className="mb-8">
+          <BrandMark size="compact" />
         </div>
         <img src={illustration} alt="Illustration" className="w-3/4 mx-auto mb-8" />
         <p className="text-lg leading-relaxed">

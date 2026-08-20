@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { FaLightbulb } from 'react-icons/fa';
-import { API_BASE_URL } from '../config';
-import { PieChart, TrendLine, QuestionBarChart } from '../components/FeedbackCharts';
+import { API_BASE_URL } from '../config.js';
+import { PieChart, TrendLine, QuestionBarChart } from '../components/FeedbackCharts.jsx';
 
 const TeacherFeedback = () => {
   const { teacherId } = useParams();

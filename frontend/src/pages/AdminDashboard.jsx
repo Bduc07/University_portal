@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import StudentIcon from '../assets/Student.png';
 import TeacherIcon from '../assets/Teacher.png';
 import AdminIcon from '../assets/Admin.png';
-import { API_BASE_URL } from '../config';
+import { API_BASE_URL } from '../config.js';
 // Uncomment if you have @heroicons/react installed
 // import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/solid';
 
@@ -83,7 +83,10 @@ const AdminDashboard = () => {
         </div>
 
         {/* Teachers */}
-        <div className="bg-[#1F386B] rounded-xl p-6 sm:p-8 text-center shadow-md flex flex-col items-center justify-between h-48 w-full sm:w-64">
+        <div
+          className="bg-[#1F386B] rounded-xl p-6 sm:p-8 text-center shadow-md flex flex-col items-center justify-between h-48 w-full sm:w-64 cursor-pointer hover:shadow-lg transition"
+          onClick={() => navigate('/admin/teachers')}
+        >
           <span className="text-white text-xl sm:text-2xl font-bold">Teachers</span>
           <div className="flex items-center mt-4 w-full px-4">
             <img

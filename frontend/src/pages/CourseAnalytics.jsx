@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { FaLightbulb } from 'react-icons/fa';
-import { API_BASE_URL } from '../config';
-import { PieChart, TrendLine, QuestionBarChart } from '../components/FeedbackCharts';
+import { API_BASE_URL } from '../config.js';
+import { PieChart, TrendLine, QuestionBarChart } from '../components/FeedbackCharts.jsx';
 
 const CourseCard = ({ course }) => (
   <div className="bg-white rounded-2xl shadow-md p-5 sm:p-6">

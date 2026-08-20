@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import Header from './Header';
-import { API_BASE_URL } from '../config';
+import { API_BASE_URL } from '../config.js';
 
 const Layout = ({ children }) => {
   const [userName, setUserName] = useState('');

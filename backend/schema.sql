@@ -33,3 +33,33 @@ CREATE TABLE IF NOT EXISTS feedback_responses (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (question_id) REFERENCES feedback_questions(question_id)
 );
+
+-- Admin <-> student chat. Each student has one conversation thread; any
+-- admin can reply into it (shared inbox), identified by student_id.
+CREATE TABLE IF NOT EXISTS messages (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  student_id INT NOT NULL,
+  sender_id INT NOT NULL,
+  sender_role VARCHAR(20) NOT NULL,
+  message_text TEXT NOT NULL,
+  is_read TINYINT(1) DEFAULT 0,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (student_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (sender_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- eSewa course payments. A student has access to a course once a row here
+-- reaches status = 'COMPLETE' (verified against eSewa's status API, not
+-- just trusted from the redirect).
+CREATE TABLE IF NOT EXISTS payments (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  student_id INT NOT NULL,
+  course_id INT NOT NULL,
+  transaction_uuid VARCHAR(100) NOT NULL UNIQUE,
+  amount DECIMAL(10,2) NOT NULL,
+  status VARCHAR(20) NOT NULL DEFAULT 'PENDING',
+  esewa_transaction_code VARCHAR(100) DEFAULT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (student_id) REFERENCES users(id) ON DELETE CASCADE
+);

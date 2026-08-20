@@ -1,6 +1,7 @@
 // src/courses/Courses2.jsx
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import CourseGate from '../components/CourseGate.jsx';
 
 const Courses2 = () => {
   const navigate = useNavigate();
@@ -11,6 +12,7 @@ const Courses2 = () => {
   };
 
   return (
+    <CourseGate courseId={7} courseName="Computational Mathematics">
     <div className="courses-container flex flex-col px-4 sm:px-6 lg:px-8 pb-8 max-w-6xl mx-auto font-sans">
       {/* Course Header */}
       <div className="mb-6 text-left sm:text-center">
@@ -66,6 +68,7 @@ const Courses2 = () => {
         Get Started
       </button>
     </div>
+    </CourseGate>
   );
 };
 

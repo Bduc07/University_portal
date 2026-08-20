@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { FaComments } from 'react-icons/fa';
 import homeLogo from '../assets/home.png';
 import coursesLogo from '../assets/courses.png';
 import feedbackLogo from '../assets/feedback.png';
@@ -13,6 +14,7 @@ const StudentSidebar = ({ userName, onLogout, isSidebarOpen, toggleSidebar, togg
     { img: homeLogo, text: 'Home', path: '/dashboard', action: toggleHomePage },
     { img: coursesLogo, text: 'Courses', path: '/courses' },
     { img: feedbackLogo, text: 'Feedback', path: '/student/feedback' },
+    { icon: FaComments, text: 'Messages', path: '/messages' },
   ];
 
   const isActive = (path) => location.pathname === path;
@@ -44,12 +46,16 @@ const StudentSidebar = ({ userName, onLogout, isSidebarOpen, toggleSidebar, togg
                     if (window.innerWidth < 1024) toggleSidebar();
                   }}
                 >
-                  <img
-                    src={item.img}
-                    alt={item.text}
-                    className="w-6 h-6"
-                    onError={(e) => (e.target.src = 'https://via.placeholder.com/24?text=Icon')}
-                  />
+                  {item.icon ? (
+                    <item.icon className="w-6 h-6" />
+                  ) : (
+                    <img
+                      src={item.img}
+                      alt={item.text}
+                      className="w-6 h-6"
+                      onError={(e) => (e.target.src = 'https://via.placeholder.com/24?text=Icon')}
+                    />
+                  )}
                   <span>{item.text}</span>
                 </div>
               </li>

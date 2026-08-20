@@ -1,11 +1,11 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaChartLine, FaChalkboardTeacher } from 'react-icons/fa';
-import logo from '../assets/logo.png';
+import { FaChartLine, FaComments, FaMoneyBillWave } from 'react-icons/fa';
 import homeIcon from '../assets/home.png';
 import feedbackIcon from '../assets/feedback.png';
+import BrandMark from './BrandMark.jsx';
 
-const AdminSidebar = ({ userName, onLogout, isSidebarOpen, toggleSidebar }) => {
+const AdminSidebar = ({ onLogout, isSidebarOpen, toggleSidebar }) => {
   const navigate = useNavigate();
 
   const handleNavigate = (path) => {
@@ -32,14 +32,8 @@ const AdminSidebar = ({ userName, onLogout, isSidebarOpen, toggleSidebar }) => {
           lg:translate-x-0`}
       >
         {/* Logo */}
-        <div className="flex items-center mb-6">
-          <img src={logo} alt="Logo" className="h-10 w-10 object-contain mr-4" />
-          <h2 className="text-sm font-semibold tracking-wider">MONUMENTAL UNIVERSITY</h2>
-        </div>
-
-        {/* User Name */}
-        <div className="mb-8 text-center">
-          <p className="text-lg font-bold">{userName || 'Admin'}</p>
+        <div className="mb-6">
+          <BrandMark size="sidebar" />
         </div>
 
         {/* Nav Links - Centered Vertically */}
@@ -66,22 +60,23 @@ const AdminSidebar = ({ userName, onLogout, isSidebarOpen, toggleSidebar }) => {
             <span>COURSE ANALYTICS</span>
           </button>
           <button
-            onClick={() => handleNavigate('/admin/teachers')}
+            onClick={() => handleNavigate('/admin/messages')}
             className="flex items-center gap-3 text-white text-base hover:text-gray-300"
           >
-            <FaChalkboardTeacher className="h-6 w-6" />
-            <span>MANAGE TEACHERS</span>
+            <FaComments className="h-6 w-6" />
+            <span>MESSAGES</span>
+          </button>
+          <button
+            onClick={() => handleNavigate('/admin/course-sales')}
+            className="flex items-center gap-3 text-white text-base hover:text-gray-300"
+          >
+            <FaMoneyBillWave className="h-6 w-6" />
+            <span>COURSE SALES</span>
           </button>
         </div>
 
-        {/* Profile / Logout */}
+        {/* Logout */}
         <div className="space-y-2">
-          <button
-            onClick={() => handleNavigate('/admin/profile')}
-            className="bg-white text-[#1F386B] py-2 px-4 w-full rounded-lg text-sm font-semibold hover:bg-gray-100"
-          >
-            VIEW PROFILE
-          </button>
           <button
             onClick={() => {
               onLogout();

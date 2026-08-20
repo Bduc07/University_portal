@@ -1,6 +1,7 @@
 // src/courses/Courses3.jsx
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import CourseGate from '../components/CourseGate.jsx';
 
 const Courses3 = () => {
   const navigate = useNavigate();
@@ -8,9 +9,10 @@ const Courses3 = () => {
   const handleGetStarted = () => {
     navigate('/courses/Courses3details');
   };
-  
+
 
   return (
+    <CourseGate courseId={8} courseName="Numerical Methods and Concurrency">
     <div className="courses-container flex flex-col px-4 sm:px-6 lg:px-8 pb-8 max-w-6xl mx-auto font-sans">
       {/* Course Header */}
       <div className="mb-6 text-left sm:text-center">
@@ -67,6 +69,7 @@ const Courses3 = () => {
         Get Started
       </button>
     </div>
+    </CourseGate>
   );
 };
 

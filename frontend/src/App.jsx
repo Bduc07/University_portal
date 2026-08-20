@@ -42,6 +42,11 @@ import DeleteCourseQuestion from "./pages/DeleteCourseQuestion";
 import GiveFeedback from "./pages/Givefeedback"; // Note case sensitivity!
 import CourseAnalytics from "./pages/CourseAnalytics";
 import ManageTeachers from "./pages/ManageTeachers";
+import AdminMessages from "./pages/AdminMessages";
+import Chat from "./pages/Chat";
+import PaymentResult from "./pages/PaymentResult";
+import CourseSales from "./pages/CourseSales";
+import { disconnectSocket } from "./socket.js";
 
 function App() {
   const handleLogout = () => {
@@ -49,6 +54,7 @@ function App() {
     localStorage.removeItem("role");
     localStorage.removeItem("userName");
     localStorage.removeItem("userId");
+    disconnectSocket();
   };
 
   return (
@@ -202,6 +208,22 @@ function App() {
               </PrivateRoute>
             }
           />
+          <Route
+            path="/admin/messages"
+            element={
+              <PrivateRoute roleRequired="admin">
+                <AdminMessages />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/admin/course-sales"
+            element={
+              <PrivateRoute roleRequired="admin">
+                <CourseSales />
+              </PrivateRoute>
+            }
+          />
         </Route>
 
         {/* Student routes */}
@@ -211,6 +233,22 @@ function App() {
             element={
               <PrivateRoute roleRequired="student">
                 <StudentDashboard />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/messages"
+            element={
+              <PrivateRoute roleRequired="student">
+                <Chat />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/payment-result"
+            element={
+              <PrivateRoute roleRequired="student">
+                <PaymentResult />
               </PrivateRoute>
             }
           />

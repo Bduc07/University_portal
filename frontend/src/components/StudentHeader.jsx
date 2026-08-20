@@ -1,26 +1,11 @@
 // src/components/StudentHeader.jsx
-import logo from '../assets/logo.png';
 import studentIcon from '../assets/Student.png';
+import BrandMark from './BrandMark.jsx';
 
 const StudentHeader = ({ userName, toggleSidebar, isSidebarOpen }) => {
   return (
     <header className="fixed top-0 left-0 w-full bg-[#1F386B] flex justify-between items-center py-3 px-4 md:px-8 shadow-md z-40 text-white">
-      <div className="flex items-center">
-        <img
-          src={logo}
-          alt="Monumental University Logo"
-          className="h-[60px] w-[60px] sm:h-[80px] sm:w-[80px] md:h-[89px] md:w-[89px] object-contain"
-          onError={(e) => (e.target.src = 'https://via.placeholder.com/89?text=Logo')}
-        />
-        <div className="flex flex-col ml-2 sm:ml-4">
-          <span className="text-lg sm:text-xl md:text-2xl font-bold tracking-[5px] uppercase font-['Inria_Serif']">
-            MONUMENTAL
-          </span>
-          <span className="text-xs sm:text-sm md:text-sm tracking-[5px] uppercase font-['Inria_Serif'] mt-1 sm:mt-2">
-            UNIVERSITY
-          </span>
-        </div>
-      </div>
+      <BrandMark size="header" />
 
       <div className="flex items-center gap-2 sm:gap-4 md:gap-5 mr-4 md:mr-8">
         <button

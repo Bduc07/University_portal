@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { API_BASE_URL } from '../config';
+import { API_BASE_URL } from '../config.js';
+import BrandMark from '../components/BrandMark.jsx';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -69,18 +70,7 @@ const Login = () => {
   return (
     <div className="min-h-screen bg-[#1F386B] flex flex-col items-center justify-center p-4">
       <header className="flex items-center pl-4 mb-8 w-full">
-        <img
-          src="https://cdn.builder.io/api/v1/image/assets/TEMP/013a15179bd33a127ac414e28ebb8faaf60aa095"
-          alt="University logo"
-          className="w-[115px] h-[116px] max-sm:w-[80px] max-sm:h-[80px]"
-        />
-        <div className="flex flex-col ml-4">
-          <h1 className="text-xl font-bold text-white tracking-[5px] text-left max-sm:text-base">
-            MONUMENTAL
-          </h1>
-          <h2 className="text-lg font-medium text-white mt-2 text-left">University</h2>
-          <div className="bg-white w-[187px] max-sm:w-[140px]" />
-        </div>
+        <BrandMark size="compact" />
       </header>
 
       <div className="bg-white p-8 rounded-3xl shadow-sm w-full max-w-md">

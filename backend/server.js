@@ -7,6 +7,7 @@ const pool = require('./config/db');
 
 dotenv.config();
 
+const http = require('http');
 const feedbackTeacherRoutes = require('./routes/feedbackTeacherRoutes');
 const coursesRoutes = require('./routes/coursesRoutes');
 const authRoutes = require('./routes/authRoutes');
@@ -14,7 +15,10 @@ const statsRoutes = require('./routes/statsRoutes');
 const studentRoutes = require('./routes/studentRoutes');
 const feedbackTargetsRoutes = require('./routes/feedbackTargetsRoutes');
 const teachersRoutes = require('./routes/teachersRoutes');
+const messagesRoutes = require('./routes/messagesRoutes');
+const paymentsRoutes = require('./routes/paymentsRoutes');
 const { protect, authorizeRoles } = require('./middlewares/authMiddleware');
+const { initSocket } = require('./socket');
 
 const app = express();
 
@@ -33,6 +37,8 @@ app.use('/api', coursesRoutes);
 app.use('/api', feedbackTargetsRoutes);
 app.use('/api/students', studentRoutes);
 app.use('/api/teachers', teachersRoutes);
+app.use('/api/messages', messagesRoutes);
+app.use('/api/payments', paymentsRoutes);
 
 // Remove or comment out /api/teachers endpoints since teachers table doesn't exist
 /*
@@ -224,7 +230,10 @@ app.get('/api/feedback/check-last-submission', protect, authorizeRoles('student'
   }
 })();
 
+const httpServer = http.createServer(app);
+initSocket(httpServer, corsOptions);
+
 const PORT = process.env.PORT || 3037;
-app.listen(PORT, () => {
+httpServer.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
 });

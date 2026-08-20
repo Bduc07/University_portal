@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import StudentHeader from './StudentHeader';
 import StudentSidebar from './StudentSidebar';
+import { disconnectSocket } from '../socket.js';
 
 const StudentLayout = () => {
   const [userName, setUserName] = useState('Student');
@@ -43,6 +44,7 @@ const StudentLayout = () => {
     localStorage.removeItem('role');
     localStorage.removeItem('userName');
     localStorage.removeItem('userId');
+    disconnectSocket();
     window.location.href = '/login';
   };
 
