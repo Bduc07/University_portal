@@ -4,6 +4,7 @@ import { FaChartLine, FaComments, FaMoneyBillWave } from 'react-icons/fa';
 import homeIcon from '../assets/home.png';
 import feedbackIcon from '../assets/feedback.png';
 import BrandMark from './BrandMark.jsx';
+import NotificationBell from './NotificationBell.jsx';
 
 const AdminSidebar = ({ onLogout, isSidebarOpen, toggleSidebar }) => {
   const navigate = useNavigate();
@@ -32,8 +33,9 @@ const AdminSidebar = ({ onLogout, isSidebarOpen, toggleSidebar }) => {
           lg:translate-x-0`}
       >
         {/* Logo */}
-        <div className="mb-6">
+        <div className="mb-6 flex items-center justify-between">
           <BrandMark size="sidebar" />
+          <NotificationBell />
         </div>
 
         {/* Nav Links - Centered Vertically */}

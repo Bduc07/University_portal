@@ -1,9 +1,19 @@
 const { Server } = require('socket.io');
 const jwt = require('jsonwebtoken');
 const pool = require('./config/db');
+const { notify } = require('./utils/notify');
+
+let ioInstance = null;
+
+// Lets REST controllers (e.g. payments) emit socket events too, not just
+// the socket handlers in this file.
+function getIO() {
+  return ioInstance;
+}
 
 function initSocket(httpServer, corsOptions) {
   const io = new Server(httpServer, { cors: corsOptions });
+  ioInstance = io;
 
   io.use((socket, next) => {
     const token = socket.handshake.auth?.token;
@@ -61,6 +71,24 @@ function initSocket(httpServer, corsOptions) {
         io.to(`student-${targetStudentId}`).emit('new_message', message);
         // So an admin's conversation list updates even if that thread isn't open.
         io.to('admins').emit('new_message', message);
+
+        if (role === 'student') {
+          await notify(pool, io, {
+            audienceRole: 'admin',
+            type: 'message',
+            title: `New message from ${socket.user.name}`,
+            body: text.trim(),
+            link: '/admin/messages',
+          });
+        } else {
+          await notify(pool, io, {
+            userId: targetStudentId,
+            type: 'message',
+            title: 'New message from Admin',
+            body: text.trim(),
+            link: '/messages',
+          });
+        }
       } catch (err) {
         console.error('Error saving chat message:', err);
         socket.emit('message_error', { error: 'Failed to send message' });
@@ -71,4 +99,4 @@ function initSocket(httpServer, corsOptions) {
   return io;
 }
 
-module.exports = { initSocket };
+module.exports = { initSocket, getIO };

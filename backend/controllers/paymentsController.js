@@ -1,5 +1,7 @@
 const pool = require('../config/db');
 const { buildPaymentForm, decodeAndVerifyCallback, checkTransactionStatus } = require('../utils/esewa');
+const { notify } = require('../utils/notify');
+const { getIO } = require('../socket');
 
 // Same hardcoded course roster used by Courses.jsx / feedbackPage.jsx —
 // courses aren't real database records yet.
@@ -59,15 +61,29 @@ exports.handleSuccess = async (req, res) => {
     if (rows.length === 0) throw new Error('Unknown transaction');
     const payment = rows[0];
 
+    const courseName = COURSE_PRICES[payment.course_id]?.name || `Course #${payment.course_id}`;
+
     if (statusCheck.status === 'COMPLETE') {
       await pool.query(
         'UPDATE payments SET status = "COMPLETE", esewa_transaction_code = ? WHERE id = ?',
         [payload.transaction_code || null, payment.id]
       );
+      await notify(pool, getIO(), {
+        userId: payment.student_id,
+        type: 'payment',
+        title: `Payment successful — ${courseName}`,
+        link: '/payment-result',
+      });
       return res.redirect(`${frontendUrl}/payment-result?status=success&courseId=${payment.course_id}`);
     }
 
     await pool.query('UPDATE payments SET status = "FAILED" WHERE id = ?', [payment.id]);
+    await notify(pool, getIO(), {
+      userId: payment.student_id,
+      type: 'payment',
+      title: `Payment failed — ${courseName}`,
+      link: '/payment-result',
+    });
     return res.redirect(`${frontendUrl}/payment-result?status=failed&courseId=${payment.course_id}`);
   } catch (err) {
     console.error('Error handling eSewa success callback:', err);
@@ -84,6 +100,13 @@ exports.handleFailure = async (req, res) => {
       const [rows] = await pool.query('SELECT * FROM payments WHERE transaction_uuid = ?', [transactionUuid]);
       if (rows.length > 0) {
         await pool.query('UPDATE payments SET status = "FAILED" WHERE id = ?', [rows[0].id]);
+        const courseName = COURSE_PRICES[rows[0].course_id]?.name || `Course #${rows[0].course_id}`;
+        await notify(pool, getIO(), {
+          userId: rows[0].student_id,
+          type: 'payment',
+          title: `Payment failed — ${courseName}`,
+          link: '/payment-result',
+        });
         return res.redirect(`${frontendUrl}/payment-result?status=failed&courseId=${rows[0].course_id}`);
       }
     }

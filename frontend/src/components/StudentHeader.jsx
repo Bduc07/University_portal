@@ -1,6 +1,7 @@
 // src/components/StudentHeader.jsx
 import studentIcon from '../assets/Student.png';
 import BrandMark from './BrandMark.jsx';
+import NotificationBell from './NotificationBell.jsx';
 
 const StudentHeader = ({ userName, toggleSidebar, isSidebarOpen }) => {
   return (
@@ -24,6 +25,7 @@ const StudentHeader = ({ userName, toggleSidebar, isSidebarOpen }) => {
         </button>
 
         <div className="flex items-center gap-2 sm:gap-4 md:gap-5">
+          <NotificationBell />
           <span className="text-lg sm:text-xl md:text-2xl font-bold font-['Poppins']">
             {userName || 'Student'}
           </span>

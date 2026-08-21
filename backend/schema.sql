@@ -63,3 +63,19 @@ CREATE TABLE IF NOT EXISTS payments (
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   FOREIGN KEY (student_id) REFERENCES users(id) ON DELETE CASCADE
 );
+
+-- In-app notifications. Targeted at one user (user_id, e.g. a student) or
+-- broadcast to a role (audience_role, e.g. 'admin') the same way the
+-- messages table treats admin as a shared inbox rather than individuals.
+CREATE TABLE IF NOT EXISTS notifications (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT DEFAULT NULL,
+  audience_role VARCHAR(20) DEFAULT NULL,
+  type VARCHAR(30) NOT NULL,
+  title VARCHAR(255) NOT NULL,
+  body VARCHAR(255) DEFAULT NULL,
+  link VARCHAR(255) DEFAULT NULL,
+  is_read TINYINT(1) DEFAULT 0,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);

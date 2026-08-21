@@ -17,6 +17,7 @@ const feedbackTargetsRoutes = require('./routes/feedbackTargetsRoutes');
 const teachersRoutes = require('./routes/teachersRoutes');
 const messagesRoutes = require('./routes/messagesRoutes');
 const paymentsRoutes = require('./routes/paymentsRoutes');
+const notificationsRoutes = require('./routes/notificationsRoutes');
 const { protect, authorizeRoles } = require('./middlewares/authMiddleware');
 const { initSocket } = require('./socket');
 
@@ -39,6 +40,7 @@ app.use('/api/students', studentRoutes);
 app.use('/api/teachers', teachersRoutes);
 app.use('/api/messages', messagesRoutes);
 app.use('/api/payments', paymentsRoutes);
+app.use('/api/notifications', notificationsRoutes);
 
 // Remove or comment out /api/teachers endpoints since teachers table doesn't exist
 /*
