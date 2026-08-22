@@ -1,7 +1,16 @@
 const { Server } = require('socket.io');
 const jwt = require('jsonwebtoken');
+const Anthropic = require('@anthropic-ai/sdk');
 const pool = require('./config/db');
 const { notify } = require('./utils/notify');
+const anthropic = require('./utils/anthropicClient');
+
+const AI_SYSTEM_PROMPT = (course) =>
+  `You are a friendly, encouraging study assistant for a university's online course platform. ` +
+  `This student is enrolled in '${course || 'their course'}'. Explain concepts clearly with examples, ` +
+  `and keep answers focused. Guide the student toward understanding rather than doing graded work for ` +
+  `them — if asked to complete an assignment or quiz outright, help them reason through it instead of ` +
+  `giving the final answer.`;
 
 let ioInstance = null;
 
@@ -92,6 +101,73 @@ function initSocket(httpServer, corsOptions) {
       } catch (err) {
         console.error('Error saving chat message:', err);
         socket.emit('message_error', { error: 'Failed to send message' });
+      }
+    });
+
+    socket.on('ask_ai', async ({ text }) => {
+      if (role !== 'student' || !text || !text.trim()) return;
+      const question = text.trim();
+
+      try {
+        const [userInsert] = await pool.query(
+          'INSERT INTO ai_chat_messages (student_id, role, content) VALUES (?, "user", ?)',
+          [id, question]
+        );
+        io.to(`student-${id}`).emit('ai_chat_message', {
+          id: userInsert.insertId,
+          student_id: id,
+          role: 'user',
+          content: question,
+          created_at: new Date().toISOString(),
+        });
+
+        const [history] = await pool.query(
+          `SELECT role, content FROM ai_chat_messages WHERE student_id = ?
+           ORDER BY created_at DESC LIMIT 20`,
+          [id]
+        );
+        const messages = history.reverse().map((row) => ({ role: row.role, content: row.content }));
+
+        const [[student]] = await pool.query('SELECT course FROM users WHERE id = ?', [id]);
+
+        const stream = anthropic.messages.stream({
+          model: 'claude-opus-5',
+          max_tokens: 4096,
+          output_config: { effort: 'medium' },
+          system: AI_SYSTEM_PROMPT(student?.course),
+          messages,
+        });
+
+        stream.on('text', (delta) => {
+          io.to(`student-${id}`).emit('ai_chat_chunk', { delta });
+        });
+
+        const finalMessage = await stream.finalMessage();
+        const replyText = finalMessage.content
+          .filter((block) => block.type === 'text')
+          .map((block) => block.text)
+          .join('');
+
+        const [assistantInsert] = await pool.query(
+          'INSERT INTO ai_chat_messages (student_id, role, content) VALUES (?, "assistant", ?)',
+          [id, replyText]
+        );
+        io.to(`student-${id}`).emit('ai_chat_done', {
+          id: assistantInsert.insertId,
+          student_id: id,
+          role: 'assistant',
+          content: replyText,
+          created_at: new Date().toISOString(),
+        });
+      } catch (err) {
+        console.error('Error handling AI chat message:', err);
+        const message =
+          err instanceof Anthropic.RateLimitError
+            ? 'The AI assistant is busy right now — try again in a moment.'
+            : err instanceof Anthropic.APIError
+            ? 'The AI assistant is temporarily unavailable.'
+            : 'Failed to get a response from the AI assistant.';
+        socket.emit('ai_chat_error', { error: message });
       }
     });
   });

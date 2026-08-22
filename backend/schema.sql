@@ -79,3 +79,14 @@ CREATE TABLE IF NOT EXISTS notifications (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
+
+-- One AI study-assistant thread per student (student <-> Claude, not a
+-- human conversation, so kept separate from `messages`).
+CREATE TABLE IF NOT EXISTS ai_chat_messages (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  student_id INT NOT NULL,
+  role VARCHAR(20) NOT NULL,
+  content TEXT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (student_id) REFERENCES users(id) ON DELETE CASCADE
+);

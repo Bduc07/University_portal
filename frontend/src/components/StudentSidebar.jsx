@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { FaComments } from 'react-icons/fa';
+import { FaComments, FaRobot } from 'react-icons/fa';
 import homeLogo from '../assets/home.png';
 import coursesLogo from '../assets/courses.png';
 import feedbackLogo from '../assets/feedback.png';
@@ -15,6 +15,7 @@ const StudentSidebar = ({ userName, onLogout, isSidebarOpen, toggleSidebar, togg
     { img: coursesLogo, text: 'Courses', path: '/courses' },
     { img: feedbackLogo, text: 'Feedback', path: '/student/feedback' },
     { icon: FaComments, text: 'Messages', path: '/messages' },
+    { icon: FaRobot, text: 'AI Tutor', path: '/ai-tutor' },
   ];
 
   const isActive = (path) => location.pathname === path;

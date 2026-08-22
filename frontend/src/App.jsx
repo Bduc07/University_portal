@@ -44,6 +44,7 @@ import CourseAnalytics from "./pages/CourseAnalytics";
 import ManageTeachers from "./pages/ManageTeachers";
 import AdminMessages from "./pages/AdminMessages";
 import Chat from "./pages/Chat";
+import AiTutor from "./pages/AiTutor";
 import PaymentResult from "./pages/PaymentResult";
 import CourseSales from "./pages/CourseSales";
 import { disconnectSocket } from "./socket.js";
@@ -241,6 +242,14 @@ function App() {
             element={
               <PrivateRoute roleRequired="student">
                 <Chat />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/ai-tutor"
+            element={
+              <PrivateRoute roleRequired="student">
+                <AiTutor />
               </PrivateRoute>
             }
           />
